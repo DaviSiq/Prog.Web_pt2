@@ -1,0 +1,71 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Definição da fonte e cores gerais */
+  body {
+    font-family: Arial, sans-serif; /* ou 'Roboto', se preferir */
+    background: linear-gradient(to bottom, #ffffff, #e0e0e0); /* cor de fundo clara, similar ao modo claro da tela principal */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+  }
+  
+  /* Container centralizado para o formulário */
+  .login-container {
+    background-color: #fff;
+    padding: 40px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+  }
+  
+  /* Estilos do formulário */
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  /* Título do formulário */
+  .login-form h2 {
+    color: #444;
+    margin-bottom: 10px;
+  }
+  
+  /* Inputs do formulário */
+  .login-form input {
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+  }
+  
+  .login-form input:focus {
+    border-color: #28a745;
+    outline: none;
+  }
+  
+  /* Botão de envio */
+  .login-form button {
+    padding: 12px;
+    font-size: 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .login-form button:hover {
+    background-color: #218838;
+  }
+  

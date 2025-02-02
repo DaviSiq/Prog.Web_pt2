@@ -14,5 +14,20 @@ async function buscarDado(title, year, typeContent, plot) { // retorna o primeir
         return response
     }
 }
+async function buscarDados(title, year, typeContent, plot) { // retorna o primeiro melhor resultado
+    try {
+        const url = `http://www.omdbapi.com/?s=${title}&y=${year}&type=${typeContent}&plot=${plot}&apikey=2893807f`;
+        response = await axios.get(url)
+         
+        return response.data
+    } catch(error) {
+        response = error
+        console.error(response)
 
-module.exports = { buscarDado };
+        return response
+    }
+}
+
+
+
+module.exports = { buscarDado, buscarDados };

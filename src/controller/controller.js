@@ -1,12 +1,17 @@
-const { buscarDadoServices } = require('../services/services');
+const { buscarDadoServices, buscarDadosServices } = require('../services/services');
 
 async function buscarDadoController(req, res) {
-    const {title, year, type, plot} = req.body;
-    const resposta = await buscarDadoServices(title, year, type, plot)
-    //recebe um JSON
-    //envia JSON para o front
-    console.log(resposta);
-    res.send(resposta)
+    const { title, year, type, plot } = req.body;
+    const resposta = await buscarDadoServices(title, year, type, plot);
+    res.send(resposta); // Envia o JSON de resposta para o front
+    //console.log(resposta)
 }
 
-module.exports = { buscarDadoController }
+async function buscarDadosController(req, res) {
+    const { title, year, type, plot } = req.body;
+    const resposta = await buscarDadosServices(title, year, type, plot);
+    console.log(resposta)
+    res.send(resposta); // Envia o JSON de resposta para o front
+}
+
+module.exports = { buscarDadoController, buscarDadosController };

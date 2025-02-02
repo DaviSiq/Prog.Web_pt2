@@ -64,14 +64,13 @@ function displayError(error) {
 
 // Função para exibir os dados do filme principal.
 function displayResult(data) {
-    console.log("teste")
     let resultDiv = document.getElementById('result');
-
     resultDiv.innerHTML = '';
 
     let fragment = document.createDocumentFragment();
 
-    const elements = [
+    // Informações SEMPRE visíveis
+    const alwaysVisible = [
         { tag: 'h2', text: data.Title },
         { tag: 'p', text: `Ano: ${data.Year}` },
         { tag: 'p', text: `Classificação: ${data.Rated}` },
@@ -83,9 +82,28 @@ function displayResult(data) {
         { tag: 'p', text: `Atores: ${data.Actors}` },
         { tag: 'p', text: `Enredo: ${data.Plot}` },
         { tag: 'p', text: `Idioma: ${data.Language}` },
-        { tag: 'p', text: `País: ${data.Country}` },
+        { tag: 'p', text: `País: ${data.Country}` }
+    ];
+
+    alwaysVisible.forEach(element => {
+        let el = document.createElement(element.tag);
+        el.innerHTML = `<strong>${element.text.split(':')[0]}:</strong> ${element.text.split(':')[1]}`;
+        fragment.appendChild(el);
+    });
+
+    // Imagem (Pôster)
+    const poster = document.createElement('img');
+    poster.src = data.Poster;
+    poster.alt = `${data.Title} Poster`;
+    fragment.appendChild(poster);
+
+    // Informações que aparecem ao clicar no botão "Ver Mais"
+    const moreDetails = document.createElement('div');
+    moreDetails.id = 'more-details';
+    moreDetails.style.display = 'none';
+
+    const hiddenDetails = [
         { tag: 'p', text: `Prêmios: ${data.Awards}` },
-        { tag: 'img', attributes: { src: data.Poster, alt: `${data.Title} Poster` } },
         { tag: 'p', text: `Metascore: ${data.Metascore}` },
         { tag: 'p', text: `Avaliação IMDB: ${data.imdbRating}` },
         { tag: 'p', text: `Votos IMDB: ${data.imdbVotes}` },
@@ -97,37 +115,84 @@ function displayResult(data) {
         { tag: 'p', text: `Website: ${data.Website}` }
     ];
 
-    elements.forEach(({ tag, text, attributes }) => {
-        let element = document.createElement(tag);
-
-        if (text) element.textContent = text;
-
-        if (attributes) {
-            for (let key in attributes) {
-                element.setAttribute(key, attributes[key]);
-            }
-        }
-
-        fragment.appendChild(element);
+    hiddenDetails.forEach(element => {
+        let el = document.createElement(element.tag);
+        el.innerHTML = `<strong>${element.text.split(':')[0]}:</strong> ${element.text.split(':')[1]}`;
+        moreDetails.appendChild(el);
     });
 
-    let ratingsDiv = document.createElement('div');
-    ratingsDiv.classList.add('rating');
-    ratingsDiv.innerHTML = '<h3>Avaliações:</h3>';
-    ratingsDiv.style.display = 'flex';
-    ratingsDiv.style.flexDirection = 'column';
-    ratingsDiv.style.alignItems = 'center';
-    ratingsDiv.style.textAlign = 'center';
-
-    data.Ratings.forEach(rating => {
-        let ratingP = document.createElement('p');
-        ratingP.textContent = `${rating.Source}: ${rating.Value}`;
-        ratingsDiv.appendChild(ratingP);
+    // Botão "Ver Mais"
+    const moreButton = document.createElement('button');
+    moreButton.textContent = "Ver Mais";
+    moreButton.addEventListener('click', () => {
+        moreDetails.style.display = moreDetails.style.display === 'none' ? 'block' : 'none';
+        moreButton.textContent = moreDetails.style.display === 'none' ? 'Ver Mais' : 'Ver Menos';
     });
 
-    fragment.appendChild(ratingsDiv);
+    // Adicionando ao DOM
+    fragment.appendChild(moreButton);
+    fragment.appendChild(moreDetails);
     resultDiv.appendChild(fragment);
 }
+
+
+
+
+//SUGESTOES
+document.getElementById('suggestion-btn').addEventListener('click', () => {
+    fetchSuggestions();
+});
+
+let suggestions = [];
+let currentIndex = 0;
+const moviesPerPage = 3;
+
+async function fetchSuggestions() {
+    try {
+        // Simulação de API (substituir pela real)
+        suggestions = await fetch('/api/buscar-sugestoes') 
+            .then(response => response.json());
+
+        currentIndex = 0; // Reinicia a contagem
+        displaySuggestions();
+    } catch (error) {
+        console.error('Erro ao buscar sugestões:', error);
+    }
+}
+
+function displaySuggestions() {
+    const suggestionsDiv = document.getElementById('suggestions');
+    suggestionsDiv.innerHTML = ''; // Limpa antes de exibir novos
+
+    const endIndex = Math.min(currentIndex + moviesPerPage, suggestions.length);
+    for (let i = currentIndex; i < endIndex; i++) {
+        const movie = suggestions[i];
+        const movieElement = document.createElement('div');
+        movieElement.classList.add('suggestion-item');
+        movieElement.innerHTML = `
+            <h3>${movie.Title}</h3>
+            <img src="${movie.Poster}" alt="${movie.Title}">
+            <p>${movie.Year}</p>
+        `;
+        suggestionsDiv.appendChild(movieElement);
+    }
+
+    currentIndex += moviesPerPage;
+    
+    // Mostra o botão "Ver Mais" se houver mais sugestões
+    const moreButton = document.getElementById('more-suggestions');
+    moreButton.style.display = currentIndex < suggestions.length ? 'block' : 'none';
+}
+
+document.getElementById('more-suggestions').addEventListener('click', () => {
+    displaySuggestions();
+});
+
+
+
+
+//SUGESTOES QUE NAO FUNCIONA
+
 
 // Função para buscar sugestões
 function fetchSuggestions(title) {

@@ -1,4 +1,3 @@
-// Adiciona um event listener ao formulário com o ID 'omdb-form' que "escuta" o evento 'submit'.
 // Função para alternar entre modo claro e escuro
 document.getElementById('toggle-theme').addEventListener('click', function () {
     const body = document.body;
@@ -59,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-/*
+// Adiciona um event listener ao formulário com o ID 'omdb-form' que "escuta" o evento 'submit'.
 document.getElementById('omdb-form').addEventListener('submit', function (event) {
     event.preventDefault();
 
@@ -88,7 +87,25 @@ document.getElementById('omdb-form').addEventListener('submit', function (event)
             console.error('Error:', error);
         });
 });
-*/
+
+document.addEventListener("click", function (event) {
+    const searchInput = document.getElementById("movie-title");
+    const resultsList = document.getElementById("results");
+
+    // Verifica se o clique foi fora do input e da lista de sugestões
+    if (!searchInput.contains(event.target) && !resultsList.contains(event.target)) {
+        resultsList.style.display = "none"; // Esconde o dropdown
+    }
+});
+
+// Garante que a dropdown reapareça quando o input for focado
+document.getElementById("movie-title").addEventListener("focus", function () {
+    const resultsList = document.getElementById("results");
+    if (resultsList.children.length > 0) {
+        resultsList.style.display = "block"; // Mostra novamente se houver sugestões
+    }
+});
+
 
 // Função para exibir uma mensagem de erro.
 function displayError(error) {

@@ -1,11 +1,14 @@
 # Sobre
 
-O projeto consiste em um website que é responsável por disponibilizar dados sobre filmes, séries e episódios. ELe consome uma API que retorna os dados, a API funciona da seguinte forma, voce precisa se cadastrar no website e adquirir uma key pra poder usar nas requisições, as requisições podem ser feitas tanto no sentido de obter dados de somente um filme/serie/episodio, ou no sentido de obter dados de varios filmes/series que contenham a palavra buscada. 
+O projeto consiste em um website que é responsável por disponibilizar dados sobre filmes, séries e episódios. ELe consome uma API que retorna os dados, a API funciona da seguinte forma, voce precisa se cadastrar no website e adquirir uma key pra poder usar nas requisições, as requisições podem ser feitas tanto no sentido de obter dados de somente um filme/serie/episodio, ou no sentido de obter dados de varios filmes/series que contenham a palavra buscada, inclusive usamos essa funcionalidade pra poder fazer o dropdown da pesquisa. 
 
 # Tecnologias
 
 1. **nodeJS**
 2. **Html/Css/Js**
+
+# Lógica
+...
 
 # Estrutura de Pastas
 

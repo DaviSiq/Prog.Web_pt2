@@ -3,7 +3,7 @@
 document.getElementById('toggle-theme').addEventListener('click', () => {
     document.body.classList.toggle('dark');
     document.body.classList.toggle('light');
-    
+
     // Alterar o ícone do botão dependendo do modo
     if (document.body.classList.contains('dark')) {
         document.getElementById('toggle-theme').textContent = '☀️'; // Ícone para o modo claro
@@ -21,7 +21,44 @@ document.getElementById('login-btn').addEventListener('click', () => {
 // Adiciona a classe 'light' no body por padrão
 document.body.classList.add('light');
 
+document.addEventListener("DOMContentLoaded", function () {
+    let timeout = null;
+    const searchInput = document.getElementById("movie-title");
+    const resultsList = document.getElementById("results");
 
+    searchInput.addEventListener("input", function () {
+        let title = document.getElementById('movie-title').value;
+        let year = document.getElementById('movie-year').value;
+        let type = document.getElementById('movie-type').value;
+        let plot = document.getElementById('plot-type').value;
+
+        clearTimeout(timeout);
+
+        if (title.length <= 2) {
+            resultsList.innerHTML = "";
+            return;
+        }
+
+        timeout = setTimeout(() => {
+            fetch('/api/buscar-sugestoes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ title, year, type, plot }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    displayResult(data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }, 300);
+    });
+});
+
+/*
 document.getElementById('omdb-form').addEventListener('submit', function (event) {
     event.preventDefault();
 
@@ -29,8 +66,6 @@ document.getElementById('omdb-form').addEventListener('submit', function (event)
     let year = document.getElementById('movie-year').value;
     let type = document.getElementById('movie-type').value;
     let plot = document.getElementById('plot-type').value;
-
-    console.log({ title, year, type, plot }); // Adicionando um log para verificar os dados coletados
 
     fetch('/api/buscar', {
         method: 'POST',
@@ -45,14 +80,14 @@ document.getElementById('omdb-form').addEventListener('submit', function (event)
                 displayError(data.Error);
             } else {
                 displayResult(data);
-                fetchSuggestions(title);
+                // fetchSuggestions(title);
             }
         })
         .catch((error) => {
             console.error('Error:', error);
         });
 });
-
+*/
 
 // Função para exibir uma mensagem de erro.
 function displayError(error) {
@@ -62,8 +97,53 @@ function displayError(error) {
     resultDiv.innerHTML = `<p style="color: red;">${error}</p>`;
 }
 
-// Função para exibir os dados do filme principal.
+
 function displayResult(data) {
+    const resultsList = document.getElementById('results');
+    resultsList.innerHTML = ''; // Limpa resultados anteriores
+
+    if (!data || !data.Search || data.Search.length === 0) {
+        resultsList.innerHTML = '<li>Nenhum filme encontrado.</li>';
+        return;
+    }
+
+    data.Search.forEach(movie => {
+        let li = document.createElement('li');
+
+        li.innerHTML = `
+            <strong>${movie.Title} (${movie.Year})</strong><br>
+            <img src="${movie.Poster !== "N/A" ? movie.Poster : ""}" alt="${movie.Title}" width="50">
+        `;
+
+        li.onclick = function() {
+            resultsList.style.display = "none";
+            getMovieDetails(movie.imdbID);
+        }
+
+        resultsList.appendChild(li);
+    });
+
+    resultsList.style.display = "block";
+}
+
+function getMovieDetails(imdbID) {
+    fetch(`/api/buscar`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ imdbID }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            displayMovieDetails(data);
+        })
+        .catch(error => console.error('Erro ao buscar detalhes:', error));
+}
+
+
+// Função para exibir os dados do filme principal.
+function displayMovieDetails(data) {
     let resultDiv = document.getElementById('result');
     resultDiv.innerHTML = '';
 
@@ -71,7 +151,7 @@ function displayResult(data) {
 
     // Informações SEMPRE visíveis
     const alwaysVisible = [
-        { tag: 'h2', text: data.Title },
+        { tag: 'h2', text: `Filme: ${data.Title}` },
         { tag: 'p', text: `Ano: ${data.Year}` },
         { tag: 'p', text: `Classificação: ${data.Rated}` },
         { tag: 'p', text: `Lançado: ${data.Released}` },
@@ -135,108 +215,3 @@ function displayResult(data) {
     resultDiv.appendChild(fragment);
 }
 
-
-
-
-//SUGESTOES
-document.getElementById('suggestion-btn').addEventListener('click', () => {
-    fetchSuggestions();
-});
-
-let suggestions = [];
-let currentIndex = 0;
-const moviesPerPage = 3;
-
-async function fetchSuggestions() {
-    try {
-        // Simulação de API (substituir pela real)
-        suggestions = await fetch('/api/buscar-sugestoes') 
-            .then(response => response.json());
-
-        currentIndex = 0; // Reinicia a contagem
-        displaySuggestions();
-    } catch (error) {
-        console.error('Erro ao buscar sugestões:', error);
-    }
-}
-
-function displaySuggestions() {
-    const suggestionsDiv = document.getElementById('suggestions');
-    suggestionsDiv.innerHTML = ''; // Limpa antes de exibir novos
-
-    const endIndex = Math.min(currentIndex + moviesPerPage, suggestions.length);
-    for (let i = currentIndex; i < endIndex; i++) {
-        const movie = suggestions[i];
-        const movieElement = document.createElement('div');
-        movieElement.classList.add('suggestion-item');
-        movieElement.innerHTML = `
-            <h3>${movie.Title}</h3>
-            <img src="${movie.Poster}" alt="${movie.Title}">
-            <p>${movie.Year}</p>
-        `;
-        suggestionsDiv.appendChild(movieElement);
-    }
-
-    currentIndex += moviesPerPage;
-    
-    // Mostra o botão "Ver Mais" se houver mais sugestões
-    const moreButton = document.getElementById('more-suggestions');
-    moreButton.style.display = currentIndex < suggestions.length ? 'block' : 'none';
-}
-
-document.getElementById('more-suggestions').addEventListener('click', () => {
-    displaySuggestions();
-});
-
-
-
-
-//SUGESTOES QUE NAO FUNCIONA
-
-
-// Função para buscar sugestões
-function fetchSuggestions(title) {
-    console.log("entrou no fetch suggestions")
-    fetch('/api/buscar-sugestoes', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ title }),
-    })
-        .then(response => response.json())
-        .then(suggestions => {
-            console.log('Sugestões recebidas:', suggestions); // Verifique o que está sendo retornado aqui
-            displaySuggestions(suggestions); // Exibe as sugestões
-        })
-        .catch((error) => {
-            console.error('Erro ao buscar sugestões:', error);
-        });
-}
-
-// Função para exibir as sugestões de filmes
-function displaySuggestions(suggestions) {
-    let suggestionsDiv = document.getElementById('suggestions');
-    suggestionsDiv.innerHTML = ''; // Limpa as sugestões anteriores
-
-    if (suggestions.length === 0) {
-        suggestionsDiv.innerHTML = '<p>Nenhuma sugestão encontrada.</p>';
-    } else {
-        suggestions.forEach(suggestion => {
-            let suggestionDiv = document.createElement('div');
-            suggestionDiv.classList.add('suggestion-item');
-            
-            let suggestionTitle = document.createElement('p');
-            suggestionTitle.textContent = suggestion.Title;
-            
-            let suggestionPoster = document.createElement('img');
-            suggestionPoster.setAttribute('src', suggestion.Poster);
-            suggestionPoster.setAttribute('alt', `${suggestion.Title} Poster`);
-            
-            suggestionDiv.appendChild(suggestionTitle);
-            suggestionDiv.appendChild(suggestionPoster);
-            
-            suggestionsDiv.appendChild(suggestionDiv);
-        });
-    }
-}

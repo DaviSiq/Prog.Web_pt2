@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OMDb Search</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="script.js" defer></script>
-    <link rel="icon" href="https://img.icons8.com/?size=100&id=DuuipuI9mFC8&format=png&color=000000" type="image/x-icon">
+    <script src="../js/script.js" defer></script>
+    <link rel="icon" href="https://img.icons8.com/?size=100&id=DuuipuI9mFC8&format=png&color=000000"
+        type="image/x-icon">
 </head>
+
 <body>
 
     <header>
@@ -17,7 +20,10 @@
 
         <div class="search-form">
             <form id="omdb-form">
-                <input type="text" id="movie-title" placeholder="Nome do Filme" required>
+                <div class="search-container">
+                    <input type="text" id="movie-title" placeholder="Nome do Filme" required>
+                    <ul id="results" class="dropdown-list"></ul>
+                </div>
                 <input type="number" id="movie-year" placeholder="Ano" min="1900" max="2099">
                 <select id="movie-type">
                     <option value="movie">Filme</option>
@@ -39,22 +45,14 @@
     </header>
 
     <main>
-        <div id="suggestions" class="suggestions">
-            <!-- As sugestões serão injetadas aqui -->
-        </div>
-
         <div id="result">
             <!-- Resultado da pesquisa será injetado aqui -->
         </div>
-        
-            <div id="suggestions-container">
-                <div id="suggestions" class="suggestions"></div>
-                <button id="more-suggestions" style="display: none;">Ver Mais</button>
-            </div>
 
         <div id="mensagem">
             <h4>Observações:</h4>
-            <p> As pesquisas devem ser feitas em inglês. Para uma resposta mais precisa, digite o nome e o ano do filme.</p>
+            <p> As pesquisas devem ser feitas em inglês. Para uma resposta mais precisa, digite o nome e o ano do filme.
+            </p>
         </div>
     </main>
 
@@ -65,4 +63,5 @@
     </footer>
 
 </body>
+
 </html>

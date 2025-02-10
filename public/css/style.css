@@ -60,7 +60,7 @@ header {
     position: fixed;
     width: 100%;
     box-sizing: border-box; /* Evita que o padding faça o header ultrapassar a largura */
-    overflow: hidden;
+    overflow: visible;
 }
 
 /* Ajustes para o logo */
@@ -270,12 +270,6 @@ footer a:hover {
     height: auto;
     border-radius: 5px;
 }
-/* Estilo geral para o conteúdo */
-/* Estilo geral para o conteúdo */
-#result {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-}
 
 p {
     margin: 8px 0;
@@ -328,3 +322,52 @@ img {
     margin: 0 auto; /* Centraliza a imagem */
 }
 
+.search-container {
+    position: relative;
+    width: 300px;
+}
+
+.dropdown-list {
+    position: absolute;
+    top: 100%; /* Aparece logo abaixo do input */
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: 9999;
+}
+
+/* Cada item da lista */
+.dropdown-list li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Último item sem borda inferior */
+.dropdown-list li:last-child {
+    border-bottom: none;
+}
+
+/* Efeito hover */
+.dropdown-list li:hover {
+    background: #f0f0f0;
+}
+
+/* Ajuste para a imagem */
+.dropdown-list img {
+    width: 40px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}

@@ -1,7 +1,7 @@
 const { buscarDado, buscarDados } = require('../persistence/omdb.api')
 
-const buscarDadoServices = async (title, year, typeContent, plot) => {
-    const contentJson = await buscarDado(title, year, typeContent, plot);
+const buscarDadoServices = async (imdbID) => {
+    const contentJson = await buscarDado(imdbID);
     return contentJson;  // Aqui retornamos o objeto JavaScript recebido da busca do filme específico.
 }
 

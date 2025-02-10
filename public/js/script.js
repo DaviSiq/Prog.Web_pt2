@@ -80,7 +80,6 @@ document.getElementById('omdb-form').addEventListener('submit', function (event)
                 displayError(data.Error);
             } else {
                 displayResult(data);
-                // fetchSuggestions(title);
             }
         })
         .catch((error) => {
@@ -227,8 +226,16 @@ function displayMovieDetails(data) {
         moreButton.textContent = moreDetails.style.display === 'none' ? 'Ver Mais' : 'Ver Menos';
     });
 
+    const favoriteButton = document.createElement('button');
+    favoriteButton.textContent = "Favoritar";
+    favoriteButton.addEventListener('click', () => {
+        addFavorite(data);
+        displayFavorites();
+    });
+
     // Adicionando ao DOM
     fragment.appendChild(moreButton);
+    fragment.appendChild(favoriteButton);
     fragment.appendChild(moreDetails);
     resultDiv.appendChild(fragment);
 }

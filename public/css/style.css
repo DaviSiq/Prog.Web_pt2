@@ -389,3 +389,7 @@ body.dark .dropdown-list li {
 body.dark .dropdown-list li:hover {
     background: #333;
 }
+
+li {
+    list-style: none;
+}

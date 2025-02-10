@@ -1,14 +1,18 @@
 // Adiciona um event listener ao formulário com o ID 'omdb-form' que "escuta" o evento 'submit'.
 // Função para alternar entre modo claro e escuro
-document.getElementById('toggle-theme').addEventListener('click', () => {
-    document.body.classList.toggle('dark');
-    document.body.classList.toggle('light');
+document.getElementById('toggle-theme').addEventListener('click', function () {
+    const body = document.body;
+    console.log(body.classList)
 
-    // Alterar o ícone do botão dependendo do modo
-    if (document.body.classList.contains('dark')) {
+    // Alterna entre as classes 'light' e 'dark'
+    if (body.classList.contains('dark')) {
+        body.classList.remove('dark');
+        body.classList.add('light');
         document.getElementById('toggle-theme').textContent = '☀️'; // Ícone para o modo claro
     } else {
-        document.getElementById('toggle-theme').textContent = '🌙'; // Ícone para o modo escuro
+        body.classList.remove('light');
+        body.classList.add('dark');
+        document.getElementById('toggle-theme').textContent = '🌙'; // Ícone para o modo claro
     }
 });
 
@@ -17,9 +21,6 @@ document.getElementById('login-btn').addEventListener('click', () => {
     window.location.href = '/login';
 
 });
-
-// Adiciona a classe 'light' no body por padrão
-document.body.classList.add('light');
 
 document.addEventListener("DOMContentLoaded", function () {
     let timeout = null;
@@ -115,7 +116,7 @@ function displayResult(data) {
             <img src="${movie.Poster !== "N/A" ? movie.Poster : ""}" alt="${movie.Title}" width="50">
         `;
 
-        li.onclick = function() {
+        li.onclick = function () {
             resultsList.style.display = "none";
             getMovieDetails(movie.imdbID);
         }
